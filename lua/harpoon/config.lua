@@ -1,12 +1,13 @@
 local Extensions = require("harpoon.extensions")
 local Logger = require("harpoon.logger")
-local Path = require("plenary.path")
-local function normalize_path(buf_name, root)
-    return Path:new(buf_name):make_relative(root)
-end
-local function to_exact_name(value)
-    return "^" .. value .. "$"
-end
+-- local Path = require("plenary.path")
+-- local function normalize_path(buf_name, root)
+--     return Path:new(buf_name):make_relative(root)
+-- end
+-- local function to_exact_name(value)
+--     return "^" .. value .. "$"
+-- end
+local path = require("harpoon.path")
 
 local M = {}
 local DEFAULT_LIST = "__harpoon_files"
@@ -106,7 +107,7 @@ function M.get_default_config()
 
                 options = options or {}
 
-                local bufnr = vim.fn.bufnr(to_exact_name(list_item.value))
+                local bufnr = vim.fn.bufnr(path.to_exact_name(list_item.value))
                 local set_position = false
                 if bufnr == -1 then -- must create a buffer!
                     set_position = true
@@ -185,12 +186,18 @@ function M.get_default_config()
                 return vim.loop.cwd()
             end,
 
+            -- So we call out to a local function to normalize the path names... this does not exist
+            -- on a module... we do not create an instance of this module so we cannot do such thing
+            -- as self.x. All we want to do is expose this function to users so that they too
+            -- can glean the true system paths that harpoon is using under the hood... without
+            -- having to derive this themselves.
+
             ---@param config HarpoonPartialConfigItem
             ---@param name? any
             ---@return HarpoonListItem
             create_list_item = function(config, name)
                 name = name
-                    or normalize_path(
+                    or path.get_full_path(
                         vim.api.nvim_buf_get_name(
                             vim.api.nvim_get_current_buf()
                         ),
@@ -219,7 +226,7 @@ function M.get_default_config()
             ---@param list HarpoonList
             BufLeave = function(arg, list)
                 local bufnr = arg.buf
-                local bufname = normalize_path(
+                local bufname = path.get_item_full_path(
                     vim.api.nvim_buf_get_name(bufnr),
                     list.config.get_root_dir()
                 )
@@ -268,6 +275,11 @@ function M.merge_config(partial_config, latest_config)
         end
     end
     return config
+end
+
+---@return string
+function M.get_item_full_path(short_name, root_dir)
+    return normalize_path(short_name, root_dir)
 end
 
 ---@param settings HarpoonPartialSettings

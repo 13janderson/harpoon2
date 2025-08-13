@@ -1,6 +1,7 @@
 local Logger = require("harpoon.logger")
 local utils = require("harpoon.utils")
 local Extensions = require("harpoon.extensions")
+local path = require("harpoon.path")
 
 local function guess_length(arr)
     local last_known = #arr
@@ -283,6 +284,11 @@ function HarpoonList:resolve_displayed(displayed, length)
     if change > 0 then
         Extensions.extensions:emit(Extensions.event_names.LIST_CHANGE)
     end
+end
+
+---@param item HarpoonListItem | string
+function HarpoonList:get_item_full_path(item)
+    path.get_full_path(item.value or item, self.config.get_root_dir())
 end
 
 function HarpoonList:select(index, options)
