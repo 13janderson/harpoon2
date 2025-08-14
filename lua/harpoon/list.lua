@@ -127,7 +127,7 @@ function HarpoonList:replace_at(idx, item)
 
     Extensions.extensions:emit(
         Extensions.event_names.REPLACE,
-        { list = self, item = item, idx = idx }
+        { list = self, item = item, idx = idx }auto
     )
 end
 
