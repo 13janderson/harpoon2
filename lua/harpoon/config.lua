@@ -277,11 +277,6 @@ function M.merge_config(partial_config, latest_config)
     return config
 end
 
----@return string
-function M.get_item_full_path(short_name, root_dir)
-    return normalize_path(short_name, root_dir)
-end
-
 ---@param settings HarpoonPartialSettings
 function M.create_config(settings)
     local config = M.get_default_config()
