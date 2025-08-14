@@ -127,7 +127,7 @@ function HarpoonList:replace_at(idx, item)
 
     Extensions.extensions:emit(
         Extensions.event_names.REPLACE,
-        { list = self, item = item, idx = idx }auto
+        { list = self, item = item, idx = idx }
     )
 end
 
@@ -284,11 +284,6 @@ function HarpoonList:resolve_displayed(displayed, length)
     if change > 0 then
         Extensions.extensions:emit(Extensions.event_names.LIST_CHANGE)
     end
-end
-
----@param item HarpoonListItem | string
-function HarpoonList:get_item_full_path(item)
-    path.get_full_path(item.value or item, self.config.get_root_dir())
 end
 
 function HarpoonList:select(index, options)

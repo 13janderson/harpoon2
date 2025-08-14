@@ -197,7 +197,7 @@ function M.get_default_config()
             ---@return HarpoonListItem
             create_list_item = function(config, name)
                 name = name
-                    or path.get_full_path(
+                    or path.relative(
                         vim.api.nvim_buf_get_name(
                             vim.api.nvim_get_current_buf()
                         ),
@@ -226,7 +226,7 @@ function M.get_default_config()
             ---@param list HarpoonList
             BufLeave = function(arg, list)
                 local bufnr = arg.buf
-                local bufname = path.get_full_path(
+                local bufname = path.relative(
                     vim.api.nvim_buf_get_name(bufnr),
                     list.config.get_root_dir()
                 )
