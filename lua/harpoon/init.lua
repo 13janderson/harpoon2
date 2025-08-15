@@ -41,7 +41,6 @@ local function sync_on_change(harpoon)
         REMOVE = function() harpoon.float:draw() end,
         LIST_CHANGE = function()
             harpoon.float:draw()
-            print "LIST WAS CHANGED MATE"
         end,
     })
 end
@@ -64,7 +63,7 @@ function Harpoon:new()
     vim.api.nvim_create_autocmd('DirChanged', {
         desc = 'Hook into directory being changed and reload harpoons data',
         group = vim.api.nvim_create_augroup('HarpoonDirChanged', { clear = true }),
-        callback = function(dir)
+        callback = function(_)
             harpoon.data = Data.Data:new(config)
         end
     })
