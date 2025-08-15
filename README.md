@@ -3,8 +3,10 @@
 # Harpoon
 ##### Getting you where you want with the fewest keystrokes.
 
+</div>
+
 ## ⇁ Installation
-```
+
 * install using [lazy.nvim](https://github.com/folke/lazy.nvim)
 
 ```lua
