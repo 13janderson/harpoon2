@@ -80,7 +80,7 @@ end
 function HarpoonFloat:harpoon_has_entries()
     local list = require("harpoon"):list()
     local entries = list.items
-    if #entries == 0 or (#entries == 1 and entries[1] == "") then
+    if entries == nil or (#entries == 0 or (#entries == 1 and entries[1] == "")) then
         return false
     end
     return true
