@@ -1,5 +1,6 @@
 local Log = require("harpoon.logger")
 local Ui = require("harpoon.ui")
+local Float = require("harpoon.ui_float")
 local Data = require("harpoon.data")
 local Config = require("harpoon.config")
 local List = require("harpoon.list")
@@ -9,6 +10,7 @@ local HarpoonGroup = require("harpoon.autocmd")
 ---@class Harpoon
 ---@field config HarpoonConfig
 ---@field ui HarpoonUI
+---@field float HarpoonFloat
 ---@field _extensions HarpoonExtensions
 ---@field data HarpoonData
 ---@field logger HarpoonLog
@@ -33,6 +35,15 @@ local function sync_on_change(harpoon)
         LIST_CHANGE = sync("LIST_CHANGE"),
         POSITION_UPDATED = sync("POSITION_UPDATED"),
     })
+
+    Extensions.extensions:add_listener({
+        ADD = function() harpoon.float:draw() end,
+        REMOVE = function() harpoon.float:draw() end,
+        LIST_CHANGE = function()
+            harpoon.float:draw()
+            print "LIST WAS CHANGED MATE"
+        end,
+    })
 end
 
 ---@return Harpoon
@@ -46,8 +57,18 @@ function Harpoon:new()
         ui = Ui:new(config.settings),
         _extensions = Extensions.extensions,
         lists = {},
+        float = Float:new(),
         hooks_setup = false,
     }, self)
+
+    vim.api.nvim_create_autocmd('DirChanged', {
+        desc = '',
+        group = vim.api.nvim_create_augroup('FinBarBaz', { clear = true }),
+        callback = function(dir)
+            print("dir", dir.file)
+            harpoon.data = Data.Data:new(config)
+        end
+    })
     sync_on_change(harpoon)
 
     return harpoon
