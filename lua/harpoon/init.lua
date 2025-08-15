@@ -62,10 +62,9 @@ function Harpoon:new()
     }, self)
 
     vim.api.nvim_create_autocmd('DirChanged', {
-        desc = '',
-        group = vim.api.nvim_create_augroup('FinBarBaz', { clear = true }),
+        desc = 'Hook into directory being changed and reload harpoons data',
+        group = vim.api.nvim_create_augroup('HarpoonDirChanged', { clear = true }),
         callback = function(dir)
-            print("dir", dir.file)
             harpoon.data = Data.Data:new(config)
         end
     })

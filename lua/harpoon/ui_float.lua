@@ -4,6 +4,7 @@ local HarpoonFloat = {}
 function HarpoonFloat:new()
     self.__index = self
 
+    ---@class HarpoonFloat
     local instance = setmetatable({}, self)
     instance.anchor_winnr = vim.api.nvim_get_current_win()
     instance.is_hidden = false
@@ -53,10 +54,13 @@ function HarpoonFloat:register_autocmds()
         desc = "Detect manual closing of our own window",
         group = vim.api.nvim_create_augroup('HarpoonFloatClose', { clear = true }),
         callback = function(e)
+            print "win closed"
             vim.schedule(function()
                 if tonumber(e.match) == self.winnr then
                     -- Lucky for us this is only triggered when the user closes our window not when we hide it ourself
-                    self.is_hidden = true
+                    if self:harpoon_has_entries() then
+                        self.is_hidden = true
+                    end
                 else
                     -- If a window is closed which is not our window, then we should try to draw again
                     self:draw()
@@ -147,6 +151,7 @@ end
 function HarpoonFloat:draw()
     -- Only draw ourselves if we are not hidden by user forcefully
     if self.is_hidden then
+        print "returning early"
         return
     end
 
@@ -162,6 +167,13 @@ function HarpoonFloat:draw()
             if self:harpoon_has_entries() then
                 self:set_buffer_lines()
                 self:create_window_if_not_exists()
+            else
+                print "hiding"
+                -- so the window is closed by us here
+                -- and this will trigger the WinClosed autocmd
+                -- we only want to classify the window as hidden in the case that the user as has closed it
+                -- thus we must only set is_hidden when the list is not empty
+                self:hide()
             end
         end
     end)
