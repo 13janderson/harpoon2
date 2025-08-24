@@ -191,6 +191,8 @@ function Harpoon.setup(self, partial_config)
         self.hooks_setup = true
     end
 
+    self.float:draw()
+
     return self
 end
 
