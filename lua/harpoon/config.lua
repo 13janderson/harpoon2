@@ -33,11 +33,13 @@ M.DEFAULT_LIST = DEFAULT_LIST
 ---@field save_on_toggle boolean defaults to false
 ---@field sync_on_ui_close? boolean
 ---@field key (fun(): string)
+---@field float_hidden boolean defaults to false
 
 ---@class HarpoonPartialSettings
 ---@field save_on_toggle? boolean
 ---@field sync_on_ui_close? boolean
 ---@field key? (fun(): string)
+---@field float_hidden? boolean
 
 ---@class HarpoonConfig
 ---@field default HarpoonPartialConfigItem
@@ -61,6 +63,7 @@ function M.get_default_config()
         settings = {
             save_on_toggle = false,
             sync_on_ui_close = false,
+            float_hidden = false,
 
             key = function()
                 return vim.loop.cwd()

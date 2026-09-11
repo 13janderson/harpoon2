@@ -1,13 +1,15 @@
 ---@class HarpoonFloat
 local HarpoonFloat = {}
 
-function HarpoonFloat:new()
+---@param opts? { is_hidden?: boolean }
+function HarpoonFloat:new(opts)
+    opts = opts or {}
     self.__index = self
 
     ---@class HarpoonFloat
     local instance = setmetatable({}, self)
     instance.anchor_winnr = vim.api.nvim_get_current_win()
-    instance.is_hidden = false
+    instance.is_hidden = opts.is_hidden or false
     instance:register_autocmds()
 
     return instance
